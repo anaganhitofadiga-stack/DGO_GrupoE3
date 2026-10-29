@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="pt" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>F-86 Sabre & AIM-9 Sidewinder | Otimização Estrutural - UA DGO</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ua: {
+                            blue: '#2563eb',
+                            darkblue: '#1d4ed8',
+                            yellow: '#eab308',
+                            darkyellow: '#ca8a04',
+                            slate: '#0f172a',
+                            light: '#f8fafc',
+                            card: '#ffffff',
+                            border: '#e2e8f0'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+                        display: ['Outfit', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Three.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        body {
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+
+        /* Subtle Technical Grid Background Pattern */
+        .tech-grid {
+            background-size: 40px 40px;
+            background-image: 
+                linear-gradient(to right, rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+        }
+
+        /* F-86 Classic Stripe Motif Accent */
+        .f86-stripe-accent {
+            background: linear-gradient(135deg, #eab308 0%, #eab308 70%, #0f172a 70%, #0f172a 75%, #eab308 75%, #eab308 100%);
+        }
+
+        .academic-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+            transition: all 0.25s ease-in-out;
+        }
+
+        .academic-card:hover {
+            border-color: #2563eb;
+            box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.1);
+        }
+
+        /* GitHub Image Placeholder styling */
+        .gh-placeholder-box {
+            background-color: #f1f5f9;
+            border: 2px dashed #cbd5e1;
+            transition: all 0.2s ease;
+        }
+        .gh-placeholder-box:hover {
+            border-color: #2563eb;
+            background-color: #eff6ff;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="font-sans text-slate-900 bg-slate-50 antialiased selection:bg-blue-100 selection:text-blue-900 tech-grid min-h-screen flex flex-col">
+
+    <!-- Academic Header Banner -->
+    <div class="bg-slate-900 text-white text-xs font-mono py-2 px-4 border-b border-slate-800 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <span class="px-2 py-0.5 rounded bg-amber-500 text-slate-950 font-bold uppercase text-[10px]">DGO 2024/2025</span>
+            <span class="hidden sm:inline text-slate-300">Design e Otimização Generativa &bull; Universidade de Aveiro</span>
+        </div>
+        <div class="flex items-center gap-4 text-slate-300 text-[11px]">
+            <span><i class="fa-solid fa-graduation-cap text-amber-400 mr-1"></i> Mestrado em Engenharia Aeroespacial</span>
+            <button onclick="openGhModal()" class="text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1 bg-slate-800 px-2.5 py-1 rounded border border-slate-700">
+                <i class="fa-brands fa-github"></i> Imagens GitHub
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Brand Title -->
+                <a href="#" class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-slate-900 flex items-center justify-center text-white font-display font-black text-xl border-b-4 border-amber-500 shadow-sm">
+                        F86
+                    </div>
+                    <div>
+                        <div class="font-display font-extrabold text-lg text-slate-900 leading-tight">
+                            F-86 Sabre &amp; AIM-9
+                        </div>
+                        <div class="text-[11px] font-mono text-slate-500">
+                            Otimização Estrutural de Armamento Assimétrico
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Desktop Navigation Menu -->
+                <nav class="hidden lg:flex items-center gap-6 text-xs font-semibold uppercase tracking-wider text-slate-600">
+                    <a href="#home" class="hover:text-blue-600 transition-colors py-1">Início</a>
+                    <a href="#contexto" class="hover:text-blue-600 transition-colors py-1">Contexto</a>
+                    <a href="#objetivo" class="hover:text-blue-600 transition-colors py-1">Objetivo</a>
+                    <a href="#fase0" class="hover:text-blue-600 transition-colors py-1">Fase 0 (M0)</a>
+                    <a href="#fase1" class="hover:text-blue-600 transition-colors py-1">Fase 1 (M1)</a>
+                    <a href="#fase2" class="hover:text-blue-600 transition-colors py-1">Fase 2 (M2)</a>
+                    <a href="#equipa" class="hover:text-blue-600 transition-colors py-1">Equipa</a>
+                </nav>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-3">
+                    <a href="#cad-calc" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-mono text-xs font-bold shadow-sm transition-colors">
+                        <i class="fa-solid fa-calculator"></i> Calculadora 6G
+                    </a>
+                    <button id="mobileNavToggle" class="lg:hidden p-2 text-slate-700 hover:text-blue-600">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Mobile Nav Dropdown -->
+        <div id="mobileNav" class="hidden lg:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-6 space-y-2 text-xs font-mono font-semibold uppercase">
+            <a href="#home" class="mobile-link block py-2 border-b border-slate-100">Início</a>
+            <a href="#contexto" class="mobile-link block py-2 border-b border-slate-100">Contexto Histórico</a>
+            <a href="#objetivo" class="mobile-link block py-2 border-b border-slate-100">Objetivo do Projeto</a>
+            <a href="#fase0" class="mobile-link block py-2 border-b border-slate-100">Fase 0 (M0) - Modelação 3D</a>
+            <a href="#fase1" class="mobile-link block py-2 border-b border-slate-100">Fase 1 (M1) - Design Paramétrico &amp; CAE</a>
+            <a href="#fase2" class="mobile-link block py-2 border-b border-slate-100">Fase 2 (M2) - Otimização Topológica</a>
+            <a href="#equipa" class="mobile-link block py-2 border-b border-slate-100">Equipa do Projeto</a>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow">
+
+        <!-- SECTION 1: HERO & OVERVIEW -->
+        <section id="home" class="py-12 lg:py-16 bg-white border-b border-slate-200 relative overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Hero Narrative -->
+                    <div class="lg:col-span-7 space-y-6">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-mono">
+                            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                            <span>Memória Descritiva Pública &bull; DGO 2024/2025</span>
+                        </div>
+
+                        <h1 class="text-3xl sm:text-5xl font-display font-black text-slate-900 tracking-tight leading-tight">
+                            F-86 Sabre &amp; AIM-9 Sidewinder <br/>
+                            <span class="text-blue-600">Otimização Estrutural</span> de Armamento Assimétrico
+                        </h1>
+
+                        <p class="text-slate-600 text-base leading-relaxed">
+                            Este website documenta publicamente o projeto de investigação e engenharia aeroespacial desenvolvido na Universidade de Aveiro. O trabalho foca-se na reconstrução CAD, parametrização, análise FEA/CFD e otimização generativa do pilone de sustentação do míssil AIM-9B instalado na asa do caça North American F-86 Sabre sob manobras extremas de 6G.
+                        </p>
+
+                        <!-- Project Milestones / What's New -->
+                        <div class="academic-card p-5 rounded-2xl border-l-4 border-l-amber-500 bg-slate-50">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-mono text-xs font-bold text-slate-900 uppercase flex items-center gap-2">
+                                    <i class="fa-solid fa-bullhorn text-amber-500"></i> Estado do Planeamento (M0 &rarr; M2)
+                                </span>
+                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-blue-100 text-blue-800 font-bold">EM DESENVOLVIMENTO</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 text-center font-mono text-[11px] pt-2">
+                                <div class="bg-white p-2 rounded border border-slate-200">
+                                    <div class="font-bold text-blue-600">FASE 0 (M0)</div>
+                                    <div class="text-slate-500 text-[10px]">Normalização 3D</div>
+                                </div>
+                                <div class="bg-white p-2 rounded border border-slate-200">
+                                    <div class="font-bold text-amber-600">FASE 1 (M1)</div>
+                                    <div class="text-slate-500 text-[10px]">CAE &amp; Parametrização</div>
+                                </div>
+                                <div class="bg-white p-2 rounded border border-slate-200">
+                                    <div class="font-bold text-slate-600">FASE 2 (M2)</div>
+                                    <div class="text-slate-500 text-[10px]">Otimização Topológica</div>
+                                </div>
+                            </div>
+                            <div class="mt-3 text-[11px] text-slate-500 font-mono italic">
+                                * Nota: A Inteligência Artificial foi utilizada apenas como ferramenta auxiliar para estruturar e mapear tarefas.
+                            </div>
+                        </div>
+
+                        <!-- CTA Actions -->
+                        <div class="flex flex-wrap items-center gap-4 pt-2 font-mono text-xs font-bold">
+                            <a href="#fase0" class="px-6 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white shadow-md transition-all">
+                                <i class="fa-solid fa-cube mr-2 text-amber-400"></i> Explorar Modelação 3D
+                            </a>
+                            <a href="#contexto" class="px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 transition-all">
+                                <i class="fa-solid fa-book-open mr-2 text-blue-600"></i> Contexto Histórico 1958
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Hero Interactive 3D Canvas Viewport -->
+                    <div class="lg:col-span-5">
+                        <div class="academic-card rounded-3xl p-4 bg-white relative overflow-hidden border-2 border-slate-200 shadow-xl">
+                            
+                            <!-- 3D Toolbar Header -->
+                            <div class="flex items-center justify-between border-b border-slate-200 pb-3 mb-3 font-mono text-xs">
+                                <div class="flex items-center gap-2 font-bold text-slate-800">
+                                    <i class="fa-solid fa-microchip text-blue-600"></i>
+                                    <span>CONJUNTO ASA + PILONE + AIM-9</span>
+                                </div>
+                                <span class="px-2 py-0.5 rounded bg-blue-50 text-blue-700 text-[10px] font-bold border border-blue-200">THREE.JS 3D</span>
+                            </div>
+
+                            <!-- Canvas Container -->
+                            <div id="hero3dCanvas" class="w-full aspect-[4/3] bg-slate-900 rounded-2xl relative cursor-grab active:cursor-grabbing overflow-hidden">
+                                <!-- Instructions Overlay -->
+                                <div class="absolute bottom-3 left-3 right-3 z-10 flex justify-between items-center text-[10px] font-mono text-slate-300 bg-slate-950/80 backdrop-blur px-3 py-1.5 rounded-lg border border-slate-800">
+                                    <span><i class="fa-solid fa-arrows-spin text-amber-400"></i> Arraste para Rodar</span>
+                                    <span id="wireframeStatus" class="text-blue-400 font-bold">Sólido Shaded</span>
+                                </div>
+                            </div>
+
+                            <!-- Interactive 3D Controls Bar -->
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mt-3 font-mono text-xs">
+                                <button onclick="toggle3DWireframe()" class="px-3 py-2 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 text-slate-700 border border-slate-200 transition-colors flex items-center justify-center gap-1.5 font-semibold">
+                                    <i class="fa-solid fa-border-all"></i> Wireframe
+                                </button>
+                                <button onclick="toggle3DExplode()" class="px-3 py-2 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 text-slate-700 border border-slate-200 transition-colors flex items-center justify-center gap-1.5 font-semibold">
+                                    <i class="fa-solid fa-arrows-split-up-and-left"></i> Vista Explodida
+                                </button>
+                                <button onclick="reset3DCamera()" class="col-span-2 sm:col-span-1 px-3 py-2 rounded-lg bg-slate-100 hover:bg-blue-50 hover:text-blue-600 text-slate-700 border border-slate-200 transition-colors flex items-center justify-center gap-1.5 font-semibold">
+                                    <i class="fa-solid fa-rotate-left"></i> Reset
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 2: CONTEXTO HISTÓRICO (Operação Black Magic 1958) -->
+        <section id="contexto" class="py-16 bg-slate-50 border-b border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="max-w-3xl mb-12">
+                    <span class="font-mono text-xs font-bold text-blue-600 uppercase tracking-widest">// ENQUADRAMENTO HISTÓRICO</span>
+                    <h2 class="text-3xl sm:text-4xl font-display font-black text-slate-900 mt-2">
+                        Operação Black Magic (1958)
+                    </h2>
+                    <p class="text-slate-600 text-sm sm:text-base mt-3 leading-relaxed">
+                        A génese do combate aéreo moderno e o nascimento do míssil ar-ar guiado por IV.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    
+                    <div class="lg:col-span-7 space-y-6">
+                        <div class="academic-card p-6 sm:p-8 rounded-3xl bg-white space-y-4">
+                            <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+                                <div class="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 font-black font-display flex items-center justify-center text-lg">
+                                    1958
+                                </div>
+                                <div>
+                                    <h3 class="font-display font-bold text-slate-900 text-lg">A Segunda Crise do Estreito de Taiwan</h3>
+                                    <div class="text-xs font-mono text-slate-500">Confronto F-86 Sabre (ROCAF/USAF) vs. MiG-17 (PLAAF)</div>
+                                </div>
+                            </div>
+
+                            <p class="text-slate-600 text-sm leading-relaxed">
+                                Em 1958, no auge da Segunda Crise do Estreito de Taiwan, uma missão ultrassecreta mudou para sempre a história da aviação militar: a <b>Operação Black Magic</b>. Numa manobra audaz de engenharia e tática militar, os caças F-86 Sabre foram modificados nos hangares para transportar uma arma até então experimental: o míssil guiado por infravermelhos <b>AIM-9B Sidewinder</b>.
+                            </p>
+
+                            <p class="text-slate-600 text-sm leading-relaxed">
+                                Ao abaterem os tecnologicamente superiores MiG-17 chineses a altitudes elevadas, os F-86 modificados protagonizaram o <b>primeiro uso bem-sucedido de mísseis ar-ar em combate real na história da humanidade</b>.
+                            </p>
+
+                            <div class="p-4 rounded-2xl bg-slate-900 text-white font-mono text-xs grid grid-cols-2 gap-4">
+                                <div>
+                                    <div class="text-amber-400 font-bold">PLATAFORMA BASE</div>
+                                    <div class="text-slate-300">North American F-86 Sabre</div>
+                                </div>
+                                <div>
+                                    <div class="text-blue-400 font-bold">ARMAMENTO ADAPTADO</div>
+                                    <div class="text-slate-300">AIM-9B Sidewinder</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GitHub Image Placeholder: Historical Photo -->
+                    <div class="lg:col-span-5">
+                        <div class="gh-placeholder-box rounded-3xl p-6 text-center relative overflow-hidden" id="gh-box-historic">
+                            <div class="img-preview-container hidden mb-4">
+                                <img id="img-historic" src="" alt="F-86 Sabre Histórico" class="w-full h-auto rounded-2xl object-cover border border-slate-300 shadow-md">
+                            </div>
+                            
+                            <div class="placeholder-content space-y-3 py-6">
+                                <div class="w-16 h-16 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-2xl mx-auto shadow-sm">
+                                    <i class="fa-solid fa-plane-fly"></i>
+                                </div>
+                                <h4 class="font-display font-bold text-slate-900 text-base">Fotografia Histórica F-86 Sabre</h4>
+                                <p class="text-slate-500 text-xs max-w-xs mx-auto">
+                                    Insira a imagem do F-86 em voo (ex: <code>assets/f86_sabre_historic.jpg</code>).
+                                </p>
+                                <div class="pt-2">
+                                    <button onclick="openGhModalFor('historic')" class="px-4 py-2 rounded-xl bg-white hover:bg-slate-100 text-blue-600 font-mono text-xs font-bold border border-slate-300 shadow-sm transition-colors inline-flex items-center gap-2">
+                                        <i class="fa-brands fa-github"></i> Definir URL GitHub / Carregar
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="text-[10px] font-mono text-slate-400 border-t border-slate-200/60 pt-3 mt-2">
+                                Tag ID: <span class="text-slate-600">fig-historic</span> &bull; URL configurável no menu de imagens
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 3: OBJETIVO DO PROJETO & CALCULADORA CAD 6G -->
+        <section id="objetivo" class="py-16 bg-white border-b border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
+                    
+                    <div class="lg:col-span-6 space-y-5">
+                        <span class="font-mono text-xs font-bold text-blue-600 uppercase tracking-widest">// FORMULAÇÃO DO PROBLEMA DE ENGENHARIA</span>
+                        <h2 class="text-3xl sm:text-4xl font-display font-black text-slate-900">
+                            Interface Estrutural &amp; Carga Assimétrica
+                        </h2>
+                        <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                            Historicamente, a plataforma F-86 Sabre não foi concebida de raiz para o transporte de mísseis guiados sob o intradorso da asa. A adição de um projétil com massa superior a <b>85 kg</b> introduz esforços mecânicos altamente complexos.
+                        </p>
+                        <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                            O propósito deste projeto reside no projeto e otimização da estrutura interna da asa e do pilone de ligação para suportar cargas dinâmicas extremas: nomeadamente a simulação de uma <b>manobra evasiva com fator de carga de 6G em configuração assimétrica</b> (um míssil retido no pilone e o outro recém-disparado).
+                        </p>
+                    </div>
+
+                    <!-- Diagram Placeholder: AIM-9 Missile Geometry -->
+                    <div class="lg:col-span-6">
+                        <div class="gh-placeholder-box rounded-3xl p-6 text-center relative" id="gh-box-aim9">
+                            <div class="img-preview-container hidden mb-4">
+                                <img id="img-aim9" src="" alt="AIM-9 Sidewinder Blueprint" class="w-full h-auto rounded-2xl object-cover border border-slate-300 shadow-md">
+                            </div>
+                            
+                            <div class="placeholder-content space-y-3 py-6">
+                                <div class="w-16 h-16 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl mx-auto shadow-sm">
+                                    <i class="fa-solid fa-rocket"></i>
+                                </div>
+                                <h4 class="font-display font-bold text-slate-900 text-base">Esquema Técnico AIM-9 Sidewinder</h4>
+                                <p class="text-slate-500 text-xs max-w-sm mx-auto">
+                                    Insira a imagem do míssil e pontos de fixação (ex: <code>assets/aim9_geometry.jpg</code>).
+                                </p>
+                                <button onclick="openGhModalFor('aim9')" class="px-4 py-2 rounded-xl bg-white hover:bg-slate-100 text-amber-700 font-mono text-xs font-bold border border-slate-300 shadow-sm transition-colors inline-flex items-center gap-2">
+                                    <i class="fa-brands fa-github"></i> Definir URL GitHub / Carregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Interactive CAD Parameter Calculator Widget -->
+                <div id="cad-calc" class="academic-card p-6 sm:p-8 rounded-3xl bg-slate-900 text-white border border-slate-800 shadow-2xl">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-slate-800 pb-4 mb-6">
+                        <div>
+                            <span class="text-amber-400 font-mono text-xs font-bold uppercase tracking-wider"><i class="fa-solid fa-calculator mr-2"></i> CALCULADORA E SIMULADOR PARAMÉTRICO</span>
+                            <h3 class="text-2xl font-display font-bold text-white mt-1">Estimador de Tensão Estrutural e Massa (6G)</h3>
+                        </div>
+                        <span class="mt-2 sm:mt-0 font-mono text-[11px] px-3 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
+                            Modelo Simplificado FEA DGO
+                        </span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                        
+                        <!-- Controls -->
+                        <div class="md:col-span-7 space-y-5 font-mono text-xs">
+                            <div>
+                                <div class="flex justify-between text-slate-300 mb-1">
+                                    <span>FATOR DE CARGA (G-FORCE):</span>
+                                    <span id="valGForce" class="text-amber-400 font-bold">6.0 G</span>
+                                </div>
+                                <input id="inputGForce" type="range" min="1" max="9" step="0.5" value="6.0" class="w-full accent-amber-500 cursor-pointer">
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-slate-300 mb-1">
+                                    <span>MASSA DO MÍSSIL AIM-9B (KG):</span>
+                                    <span id="valMissileMass" class="text-blue-400 font-bold">85.5 kg</span>
+                                </div>
+                                <input id="inputMissileMass" type="range" min="50" max="120" step="2.5" value="85.5" class="w-full accent-blue-500 cursor-pointer">
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-slate-300 mb-1">
+                                    <span>ALTURA DO PILONE (MM):</span>
+                                    <span id="valPylonHeight" class="text-amber-400 font-bold">320 mm</span>
+                                </div>
+                                <input id="inputPylonHeight" type="range" min="200" max="500" step="10" value="320" class="w-full accent-amber-500 cursor-pointer">
+                            </div>
+
+                            <div>
+                                <div class="flex justify-between text-slate-300 mb-1">
+                                    <span>MATERIAL DO PILONE:</span>
+                                </div>
+                                <select id="selectMaterial" class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white font-mono text-xs focus:outline-none focus:border-blue-500">
+                                    <option value="al7075">Alumínio 7075-T6 (&sigma;_yield = 503 MPa)</option>
+                                    <option value="ti6al4v">Titânio Ti-6Al-4V (&sigma;_yield = 880 MPa)</option>
+                                    <option value="chromoly">Aço Liga 4130 Chromoly (&sigma;_yield = 435 MPa)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Results Card -->
+                        <div class="md:col-span-5 bg-slate-950 p-6 rounded-2xl border border-slate-800 space-y-4 font-mono text-center">
+                            <div>
+                                <div class="text-[10px] text-slate-400 uppercase">CARGA DINÂMICA TOTAL RESULTANTE</div>
+                                <div id="resForce" class="text-2xl font-black text-amber-400 mt-0.5">5,032 N</div>
+                            </div>
+
+                            <div class="grid grid-cols-2 gap-3 border-t border-slate-800 pt-3">
+                                <div>
+                                    <div class="text-[10px] text-slate-400 uppercase">TENSÃO MAX (VON MISES)</div>
+                                    <div id="resStress" class="text-lg font-bold text-blue-400 mt-0.5">284 MPa</div>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] text-slate-400 uppercase">FATOR DE SEGURANÇA</div>
+                                    <div id="resSafety" class="text-lg font-bold text-emerald-400 mt-0.5">1.77 (OK)</div>
+                                </div>
+                            </div>
+
+                            <div class="p-2.5 rounded-lg bg-slate-900 border border-slate-800 text-[11px]" id="statusBox">
+                                <span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle-check"></i> Estrutura Aprovada sob Carga Assimétrica</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 4: FASE 0 (M0) - NORMALIZAÇÃO E MODELAÇÃO 3D -->
+        <section id="fase0" class="py-16 bg-slate-50 border-b border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="max-w-3xl mb-10">
+                    <span class="font-mono text-xs font-bold text-blue-600 uppercase tracking-widest">// PLANEAMENTO - FASE 0 (M0)</span>
+                    <h2 class="text-3xl sm:text-4xl font-display font-black text-slate-900 mt-1">
+                        Normalização e Modelação 3D
+                    </h2>
+                    <p class="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed">
+                        Estabelecimento rigoroso da geometria CAD base no SolidWorks através de superfícies e sólidos paramétricos.
+                    </p>
+                </div>
+
+                <!-- Sub-Navigation Tabs for M0 Subsections -->
+                <div class="flex flex-wrap gap-2 mb-8 font-mono text-xs">
+                    <button onclick="switchM0Tab('fuselagem')" id="tabBtn-fuselagem" class="m0-tab-btn active px-5 py-2.5 rounded-xl bg-blue-600 text-white font-bold transition-all shadow-sm">
+                        <i class="fa-solid fa-plane mr-1.5"></i> Modelação da Fuselagem
+                    </button>
+                    <button onclick="switchM0Tab('missil')" id="tabBtn-missil" class="m0-tab-btn px-5 py-2.5 rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-300 font-bold transition-all">
+                        <i class="fa-solid fa-crosshairs mr-1.5"></i> Modelação do Míssil AIM-9
+                    </button>
+                    <button onclick="switchM0Tab('asa')" id="tabBtn-asa" class="m0-tab-btn px-5 py-2.5 rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-300 font-bold transition-all">
+                        <i class="fa-solid fa-feather-pointed mr-1.5"></i> Modelação da Asa (NACA)
+                    </button>
+                    <button onclick="switchM0Tab('assembly')" id="tabBtn-assembly" class="m0-tab-btn px-5 py-2.5 rounded-xl bg-white text-slate-700 hover:bg-slate-100 border border-slate-300 font-bold transition-all">
+                        <i class="fa-solid fa-sitemap mr-1.5"></i> Estrutura Interna &amp; Assembly
+                    </button>
+                </div>
+
+                <!-- Tab 1 Content: Fuselagem & Iterations -->
+                <div id="m0Content-fuselagem" class="m0-tab-content block space-y-8">
+                    <div class="academic-card p-6 sm:p-8 rounded-3xl bg-white">
+                        <h3 class="text-xl font-display font-bold text-slate-900 mb-3">
+                            Reconstrução Tridimensional da Fuselagem
+                        </h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                            A reconstrução inicia-se com a importação e calibração das vistas ortográficas (Blueprints 1:72) do F-86 Sabre. Através do posicionamento de planos transversais (Secções A, B, C e D), geraram-se perfis geométricos (Sketches) ao longo do eixo longitudinal para operações de <i>Lofting</i>.
+                        </p>
+
+                        <!-- Iterations Grid Viewer -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs">
+                            
+                            <!-- Model 1 Issue -->
+                            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                                <div class="px-2.5 py-1 rounded bg-red-100 text-red-700 font-bold w-fit">1º MODELO</div>
+                                <div class="font-bold text-slate-900">Excesso de Parametrização</div>
+                                <p class="text-slate-600 text-[11px] leading-relaxed">
+                                    Sketches com número excessivo de splines e pontos de controlo. Causou distorções na superfície e falhas nas operações de Lofting.
+                                </p>
+                            </div>
+
+                            <!-- Model 2 Issue -->
+                            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                                <div class="px-2.5 py-1 rounded bg-amber-100 text-amber-800 font-bold w-fit">2º MODELO</div>
+                                <div class="font-bold text-slate-900">Falta de Continuidade</div>
+                                <p class="text-slate-600 text-[11px] leading-relaxed">
+                                    Ausência de continuidade de curvatura entre as secções da fuselagem, originando transições abruptas nas junções.
+                                </p>
+                            </div>
+
+                            <!-- Model 3 Issue -->
+                            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                                <div class="px-2.5 py-1 rounded bg-blue-100 text-blue-800 font-bold w-fit">3º MODELO &rarr; FINAL</div>
+                                <div class="font-bold text-slate-900">Correção de Referências</div>
+                                <p class="text-slate-600 text-[11px] leading-relaxed">
+                                    Ajuste dimensional dos estabilizadores e canópia para rigorosa fidelidade ao blueprint e continuidade G2 de superfícies.
+                                </p>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Image Placeholder for Fuselage -->
+                    <div class="gh-placeholder-box rounded-3xl p-6 text-center" id="gh-box-fuselage">
+                        <div class="img-preview-container hidden mb-4">
+                            <img id="img-fuselage" src="" alt="Modelação Fuselagem" class="w-full h-auto rounded-2xl object-cover border border-slate-300 shadow-md">
+                        </div>
+                        <div class="placeholder-content space-y-3 py-6">
+                            <i class="fa-solid fa-cubes text-3xl text-blue-600"></i>
+                            <h4 class="font-display font-bold text-slate-900">Imagens da Modelação e Blueprints da Fuselagem</h4>
+                            <p class="text-slate-500 text-xs">Insira o blueprint e modelo da fuselagem (ex: <code>assets/fuselagem_loft.jpg</code>).</p>
+                            <button onclick="openGhModalFor('fuselage')" class="px-4 py-2 rounded-xl bg-white hover:bg-slate-100 text-blue-600 font-mono text-xs font-bold border border-slate-300 shadow-sm transition-colors">
+                                <i class="fa-brands fa-github mr-1"></i> Configurar Imagem Fuselagem
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 2 Content: Míssil AIM-9 -->
+                <div id="m0Content-missil" class="m0-tab-content hidden space-y-8">
+                    <div class="academic-card p-6 sm:p-8 rounded-3xl bg-white">
+                        <h3 class="text-xl font-display font-bold text-slate-900 mb-3">
+                            Aproximação Geométrica do Míssil AIM-9 Sidewinder
+                        </h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                            Devido ao acesso restrito a dados confidenciais de engenharia militar, a modelação baseou-se no mapeamento dimensional de esquemas técnicos e especificações públicas de referência. A prioridade focou-se no rigor nos pontos de interface, distribuição de massa e envergadura.
+                        </p>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 font-mono text-xs">
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                                <div class="text-slate-500 text-[10px]">COMPRIMENTO TOTAL</div>
+                                <div class="text-slate-900 font-bold text-sm mt-1">2.87 m (9 ft 5 in)</div>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                                <div class="text-slate-500 text-[10px]">DIÂMETRO DO CORPO</div>
+                                <div class="text-slate-900 font-bold text-sm mt-1">0.13 m (5 in)</div>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                                <div class="text-slate-500 text-[10px]">MASSA DE LANÇAMENTO</div>
+                                <div class="text-amber-600 font-bold text-sm mt-1">85.5 kg (190 lbs)</div>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                                <div class="text-slate-500 text-[10px]">VELOCIDADE MÁXIMA</div>
+                                <div class="text-blue-600 font-bold text-sm mt-1">Mach 2.5 (Supersónica)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gh-placeholder-box rounded-3xl p-6 text-center" id="gh-box-missile-cad">
+                        <div class="img-preview-container hidden mb-4">
+                            <img id="img-missile-cad" src="" alt="Modelação Míssil AIM-9" class="w-full h-auto rounded-2xl object-cover border border-slate-300 shadow-md">
+                        </div>
+                        <div class="placeholder-content space-y-3 py-6">
+                            <i class="fa-solid fa-rocket text-3xl text-amber-500"></i>
+                            <h4 class="font-display font-bold text-slate-900">Renderização CAD 3D do Míssil AIM-9B</h4>
+                            <p class="text-slate-500 text-xs">Insira a imagem da geometria do míssil (ex: <code>assets/aim9_3d_render.jpg</code>).</p>
+                            <button onclick="openGhModalFor('missile-cad')" class="px-4 py-2 rounded-xl bg-white hover:bg-slate-100 text-amber-700 font-mono text-xs font-bold border border-slate-300 shadow-sm transition-colors">
+                                <i class="fa-brands fa-github mr-1"></i> Configurar Imagem Míssil
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 3 Content: Asa (NACA) -->
+                <div id="m0Content-asa" class="m0-tab-content hidden space-y-8">
+                    <div class="academic-card p-6 sm:p-8 rounded-3xl bg-white">
+                        <h3 class="text-xl font-display font-bold text-slate-900 mb-3">
+                            Geometria Aerodinâmica da Asa (Perfis NACA)
+                        </h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6">
+                            Para assegurar a fidelidade aerodinâmica original da asa em flecha (<i>swept-wing</i>) do F-86 Sabre, a superfície exterior foi gerada através de interpolação (<i>Loft</i>) entre dois perfis simétricos da série NACA de 6ª geração:
+                        </p>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 font-mono text-xs mb-6">
+                            <div class="p-5 rounded-2xl bg-blue-50 border border-blue-200">
+                                <div class="text-blue-700 font-bold text-sm">Raiz da Asa (Root Section)</div>
+                                <div class="text-slate-900 font-black text-lg mt-1">NACA 0009-64</div>
+                                <div class="text-slate-600 text-[11px] mt-2">Espessura relativa de 9% na secção junto à fuselagem.</div>
+                            </div>
+                            <div class="p-5 rounded-2xl bg-amber-50 border border-amber-200">
+                                <div class="text-amber-800 font-bold text-sm">Ponta da Asa (Tip Section)</div>
+                                <div class="text-slate-900 font-black text-lg mt-1">NACA 0008.1-64</div>
+                                <div class="text-slate-600 text-[11px] mt-2">Espessura relativa de 8.1% na extremidade exterior.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gh-placeholder-box rounded-3xl p-6 text-center" id="gh-box-wing">
+                        <div class="img-preview-container hidden mb-4">
+                            <img id="img-wing" src="" alt="Modelação da Asa F-86" class="w-full h-auto rounded-2xl object-cover border border-slate-300 shadow-md">
+                        </div>
+                        <div class="placeholder-content space-y-3 py-6">
+                            <i class="fa-solid fa-feather-pointed text-3xl text-blue-600"></i>
+                            <h4 class="font-display font-bold text-slate-900">Perfis NACA e Sistema Asa-Pilone</h4>
+                            <p class="text-slate-500 text-xs">Insira a imagem da asa e calha de lançamento (ex: <code>assets/asa_naca_loft.jpg</code>).</p>
+                            <button onclick="openGhModalFor('wing')" class="px-4 py-2 rounded-xl bg-white hover:bg-slate-100 text-blue-600 font-mono text-xs font-bold border border-slate-300 shadow-sm transition-colors">
+                                <i class="fa-brands fa-github mr-1"></i> Configurar Imagem Asa
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 4 Content: Estrutura Interna & Assembly -->
+                <div id="m0Content-assembly" class="m0-tab-content hidden space-y-8">
+                    <div class="academic-card p-6 sm:p-8 rounded-3xl bg-white">
+                        <h3 class="text-xl font-display font-bold text-slate-900 mb-3">
+                            Estrutura Interna &amp; Montagem Final
+                        </h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                            Foi desenvolvida uma arquitetura interna composta por <b>Frames, Stringers e Spars (Longarinas)</b> para garantir a rigidez torcional sob cargas de voo.
+                        </p>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Na integração final, a skin e as ribs da asa inseridas dentro da fuselagem foram cortadas, preservando-se apenas as longarinas contínuas que atravessam a fuselagem de lado a lado para transmissão do caminho de carga.
+                        </p>
+                    </div>
+
+                    <div class="gh-placeholder-box rounded-3xl p-6 text-center" id="gh-box-assembly">
+                        <div class="img-preview-container hidden mb-4">
+                            <img id="img-assembly" src="" alt="Assembly Final F-86" class="w-full h-auto rounded-2xl object-cover border border-slate-300 shadow-md">
+                        </div>
+                        <div class="placeholder-content space-y-3 py-6">
+                            <i class="fa-solid fa-sitemap text-3xl text-emerald-600"></i>
+                            <h4 class="font-display font-bold text-slate-900">Montagem Final do Skeleton e Superfícies</h4>
+                            <p class="text-slate-500 text-xs">Insira a imagem do conjunto montado (ex: <code>assets/assembly_final.jpg</code>).</p>
+                            <button onclick="openGhModalFor('assembly')" class="px-4 py-2 rounded-xl bg-white hover:bg-slate-100 text-emerald-600 font-mono text-xs font-bold border border-slate-300 shadow-sm transition-colors">
+                                <i class="fa-brands fa-github mr-1"></i> Configurar Imagem Assembly
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 5: FASE 1 (M1) - DESIGN PARAMÉTRICO & CAE (FEA / CFD) -->
+        <section id="fase1" class="py-16 bg-white border-b border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="max-w-3xl mb-12">
+                    <span class="font-mono text-xs font-bold text-amber-600 uppercase tracking-widest">// PLANEAMENTO - FASE 1 (M1)</span>
+                    <h2 class="text-3xl sm:text-4xl font-display font-black text-slate-900 mt-1">
+                        Estratégias Computacionais, Parametrização &amp; CAE
+                    </h2>
+                    <p class="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed">
+                        Migração para Autodesk Fusion 360 / Ansys e implementação de tabelas de parâmetros dinâmicos (User Parameters).
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Parametric CAD Card -->
+                    <div class="academic-card p-6 rounded-3xl bg-white space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl mb-4 font-bold">
+                                01
+                            </div>
+                            <h3 class="font-display font-bold text-slate-900 text-lg">CAD Paramétrico</h3>
+                            <p class="text-slate-600 text-xs leading-relaxed mt-2">
+                                Parametrização exclusiva do pilone através de tabelas de variáveis (User Parameters). Alterações na altura ou posição do míssil propagam-se automaticamente sem falhas geométricas.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100">
+                            <span class="font-mono text-[10px] text-blue-600 font-bold uppercase">PROPAÇÃO AUTOMÁTICA DE VARIÁVEIS</span>
+                        </div>
+                    </div>
+
+                    <!-- FEA Structural Simulation Card -->
+                    <div class="academic-card p-6 rounded-3xl bg-white space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl mb-4 font-bold">
+                                02
+                            </div>
+                            <h3 class="font-display font-bold text-slate-900 text-lg">Simulação FEA (Ansys)</h3>
+                            <p class="text-slate-600 text-xs leading-relaxed mt-2">
+                                Avaliação das tensões de Von Mises e deformação elástica sob cargas inerciais, aerodinâmicas e momentos de torção assimétrica resultantes da manobra de 6G.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100">
+                            <span class="font-mono text-[10px] text-amber-700 font-bold uppercase">MAPA DE TENSÕES DE VON MISES</span>
+                        </div>
+                    </div>
+
+                    <!-- CFD Fluid Dynamics Card -->
+                    <div class="academic-card p-6 rounded-3xl bg-white space-y-4 flex flex-col justify-between">
+                        <div>
+                            <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl mb-4 font-bold">
+                                03
+                            </div>
+                            <h3 class="font-display font-bold text-slate-900 text-lg">Aerodinâmica CFD (Fluent)</h3>
+                            <p class="text-slate-600 text-xs leading-relaxed mt-2">
+                                Análise do descolamento da camada limite e do coeficiente de arrasto (Cd) em função do ângulo de ataque (&alpha;), comparando a asa limpa com o pilone montado.
+                            </p>
+                        </div>
+                        <div class="pt-4 border-t border-slate-100">
+                            <span class="font-mono text-[10px] text-emerald-700 font-bold uppercase">ANSYS FLUENT AERODYNAMICS</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- GitHub Image Placeholders for FEA & CFD -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
+                    <div class="gh-placeholder-box rounded-3xl p-6 text-center" id="gh-box-fea">
+                        <div class="img-preview-container hidden mb-4">
+                            <img id="img-fea" src="" alt="Simulação FEA Ansys" class="w-full h-auto rounded-2xl object-cover border border-slate-300 shadow-md">
+                        </div>
+                        <div class="placeholder-content space-y-3 py-6">
+                            <i class="fa-solid fa-chart-line text-3xl text-amber-600"></i>
+                            <h4 class="font-display font-bold text-slate-900">Resultados da Análise FEA (Ansys Structural)</h4>
+                            <p class="text-slate-500 text-xs">Insira a imagem das tensões e deformação (ex: <code>assets/fea_results.jpg</code>).</p>
+                            <button onclick="openGhModalFor('fea')" class="px-4 py-2 rounded-xl bg-white hover:bg-slate-100 text-amber-700 font-mono text-xs font-bold border border-slate-300 shadow-sm transition-colors">
+                                <i class="fa-brands fa-github mr-1"></i> Configurar Imagem FEA
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="gh-placeholder-box rounded-3xl p-6 text-center" id="gh-box-cfd">
+                        <div class="img-preview-container hidden mb-4">
+                            <img id="img-cfd" src="" alt="Simulação CFD Fluent" class="w-full h-auto rounded-2xl object-cover border border-slate-300 shadow-md">
+                        </div>
+                        <div class="placeholder-content space-y-3 py-6">
+                            <i class="fa-solid fa-wind text-3xl text-blue-600"></i>
+                            <h4 class="font-display font-bold text-slate-900">Linhas de Corrente CFD (Ansys Fluent)</h4>
+                            <p class="text-slate-500 text-xs">Insira o gráfico/campos de velocidade CFD (ex: <code>assets/cfd_fluent.jpg</code>).</p>
+                            <button onclick="openGhModalFor('cfd')" class="px-4 py-2 rounded-xl bg-white hover:bg-slate-100 text-blue-600 font-mono text-xs font-bold border border-slate-300 shadow-sm transition-colors">
+                                <i class="fa-brands fa-github mr-1"></i> Configurar Imagem CFD
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 6: FASE 2 (M2) - OTIMIZAÇÃO TOPOLÓGICA & FABRICO -->
+        <section id="fase2" class="py-16 bg-slate-50 border-b border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="max-w-3xl mb-12">
+                    <span class="font-mono text-xs font-bold text-blue-600 uppercase tracking-widest">// PLANEAMENTO - FASE 2 (M2)</span>
+                    <h2 class="text-3xl sm:text-4xl font-display font-black text-slate-900 mt-1">
+                        Otimização Topológica &amp; Generativa
+                    </h2>
+                    <p class="text-slate-600 text-sm sm:text-base mt-2 leading-relaxed">
+                        Redução da massa estrutural através do Autodesk Generative Design e preparação para maquinagem CNC ou fabrico aditivo.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                    
+                    <div class="lg:col-span-7 space-y-6">
+                        <div class="academic-card p-6 sm:p-8 rounded-3xl bg-white space-y-4">
+                            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                                <h3 class="font-display font-bold text-slate-900 text-lg">Autodesk Generative Design</h3>
+                                <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 font-mono text-xs font-bold">ALVO: ~45% REDUÇÃO MASSA</span>
+                            </div>
+
+                            <p class="text-slate-600 text-sm leading-relaxed">
+                                Recorrendo a algoritmos generativos, o espaço de projeto do pilone é iterativamente otimizado no sentido da minimização de massa, removendo material das zonas de baixa solicitação mecânica enquanto garante os fatores de segurança exigidos.
+                            </p>
+
+                            <div class="p-5 rounded-2xl bg-slate-900 text-white font-mono text-xs space-y-3">
+                                <div class="text-amber-400 font-bold uppercase">PÓS-PROCESSAMENTO &amp; RESTRIÇÕES DE FABRICO</div>
+                                <p class="text-slate-300 text-[11px] leading-relaxed">
+                                    Conversão da malha orgânica gerada num modelo CAD viável. A geometria final é suavizada e adaptada tendo em conta restrições de maquinabilidade (Fresagem CNC a 5 eixos) ou Fabrico Aditivo Metal (Impressão 3D DMLS em Titânio/Alumínio).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Placeholder for Generative Topology Image -->
+                    <div class="lg:col-span-5">
+                        <div class="gh-placeholder-box rounded-3xl p-6 text-center" id="gh-box-generative">
+                            <div class="img-preview-container hidden mb-4">
+                                <img id="img-generative" src="" alt="Otimização Generativa Pilone" class="w-full h-auto rounded-2xl object-cover border border-slate-300 shadow-md">
+                            </div>
+                            <div class="placeholder-content space-y-3 py-6">
+                                <i class="fa-solid fa-dna text-3xl text-emerald-600"></i>
+                                <h4 class="font-display font-bold text-slate-900">Geometria Generativa Otimizada</h4>
+                                <p class="text-slate-500 text-xs">Insira a imagem do pilone generativo (ex: <code>assets/generative_pylon.jpg</code>).</p>
+                                <button onclick="openGhModalFor('generative')" class="px-4 py-2 rounded-xl bg-white hover:bg-slate-100 text-emerald-700 font-mono text-xs font-bold border border-slate-300 shadow-sm transition-colors">
+                                    <i class="fa-brands fa-github mr-1"></i> Configurar Imagem Generativa
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 7: ABOUT OUR TEAM (EQUIPA) -->
+        <section id="equipa" class="py-16 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <span class="font-mono text-xs font-bold text-blue-600 uppercase tracking-widest">// SOBRE A EQUIPA DE INVESTIGAÇÃO</span>
+                    <h2 class="text-3xl sm:text-4xl font-display font-black text-slate-900 mt-1">
+                        Estudantes do Mestrado em Engenharia Aeroespacial
+                    </h2>
+                    <p class="text-slate-600 text-sm mt-2">
+                        Universidade de Aveiro &bull; Unidade Curricular de Design e Otimização Generativa (DGO)
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    
+                    <!-- Team Member 1 -->
+                    <div class="academic-card p-6 rounded-3xl text-center space-y-4">
+                        <div class="w-20 h-20 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-display font-black text-2xl mx-auto border-2 border-blue-200">
+                            AF
+                        </div>
+                        <div>
+                            <h3 class="font-display font-bold text-slate-900 text-lg">Ana Ganhito Fadiga</h3>
+                            <a href="mailto:anafadiga@ua.pt" class="font-mono text-xs text-blue-600 hover:underline">anafadiga@ua.pt</a>
+                        </div>
+                        <div class="text-xs font-mono text-slate-500 bg-slate-50 p-2 rounded-xl border border-slate-200">
+                            Modelação CAD &amp; Superfícies
+                        </div>
+                    </div>
+
+                    <!-- Team Member 2 -->
+                    <div class="academic-card p-6 rounded-3xl text-center space-y-4">
+                        <div class="w-20 h-20 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center font-display font-black text-2xl mx-auto border-2 border-amber-200">
+                            RS
+                        </div>
+                        <div>
+                            <h3 class="font-display font-bold text-slate-900 text-lg">Ricardo Bettencourt da Silva</h3>
+                            <a href="mailto:ricardo.silva22@ua.pt" class="font-mono text-xs text-blue-600 hover:underline">ricardo.silva22@ua.pt</a>
+                        </div>
+                        <div class="text-xs font-mono text-slate-500 bg-slate-50 p-2 rounded-xl border border-slate-200">
+                            Análise Estrutural FEA / CAE
+                        </div>
+                    </div>
+
+                    <!-- Team Member 3 -->
+                    <div class="academic-card p-6 rounded-3xl text-center space-y-4">
+                        <div class="w-20 h-20 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center font-display font-black text-2xl mx-auto border-2 border-slate-300">
+                            XP
+                        </div>
+                        <div>
+                            <h3 class="font-display font-bold text-slate-900 text-lg">Xavier Panchana</h3>
+                            <a href="mailto:xavieraltamirano@ua.pt" class="font-mono text-xs text-blue-600 hover:underline">xavieraltamirano@ua.pt</a>
+                        </div>
+                        <div class="text-xs font-mono text-slate-500 bg-slate-50 p-2 rounded-xl border border-slate-200">
+                            Otimização Generativa &amp; CFD
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Institution Footer Card -->
+                <div class="mt-12 p-6 rounded-3xl bg-slate-900 text-white flex flex-col sm:flex-row items-center justify-between gap-6 font-mono text-xs">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-white text-slate-950 font-black font-display flex items-center justify-center text-xl">
+                            UA
+                        </div>
+                        <div>
+                            <div class="font-bold text-base text-white">Universidade de Aveiro</div>
+                            <div class="text-slate-400">Departamento de Engenharia Mecânica &amp; Aeroespacial</div>
+                        </div>
+                    </div>
+                    <a href="https://www.ua.pt" target="_blank" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition-colors">
+                        Visitar Website UA <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i>
+                    </a>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Academic Footer -->
+    <footer class="bg-slate-950 text-slate-400 border-t border-slate-800 py-10 font-mono text-xs">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div>
+                <span class="text-white font-bold">F-86 Sabre &amp; AIM-9 Sidewinder Project</span> &bull; Memória Descritiva DGO
+            </div>
+            <div class="text-slate-500">
+                Desenvolvido para alojamento estático e integração GitHub Pages.
+            </div>
+        </div>
+    </footer>
+
+    <!-- INTERACTIVE GITHUB IMAGE CONFIGURATION MODAL -->
+    <div id="ghModal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 relative max-h-[90vh] overflow-y-auto">
+            
+            <button onclick="closeGhModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-900 text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-3 border-b border-slate-200 pb-4 mb-6">
+                <div class="w-10 h-10 rounded-xl bg-slate-900 text-white flex items-center justify-center text-xl">
+                    <i class="fa-brands fa-github"></i>
+                </div>
+                <div>
+                    <h3 class="font-display font-bold text-slate-900 text-lg">Configurador de Imagens GitHub</h3>
+                    <p class="text-xs font-mono text-slate-500">Insira URLs diretas do GitHub Raw ou carregue ficheiros locais de teste.</p>
+                </div>
+            </div>
+
+            <div class="space-y-4 font-mono text-xs">
+                
+                <div>
+                    <label class="block text-slate-700 font-bold mb-1">SELECIONE A FIGURA PARA ATUALIZAR:</label>
+                    <select id="modalTargetSelect" class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:outline-none focus:border-blue-600">
+                        <option value="historic">fig-historic: Fotografia Histórica F-86 (1958)</option>
+                        <option value="aim9">fig-aim9: Esquema Técnico Míssil AIM-9</option>
+                        <option value="fuselage">fig-fuselage: Modelação e Blueprints Fuselagem</option>
+                        <option value="missile-cad">fig-missile-cad: CAD 3D Míssil AIM-9B</option>
+                        <option value="wing">fig-wing: Perfis NACA e Asa F-86</option>
+                        <option value="assembly">fig-assembly: Assembly Final e Spars</option>
+                        <option value="fea">fig-fea: Análise de Tensões FEA (Ansys)</option>
+                        <option value="cfd">fig-cfd: Campo Aerodinâmico CFD (Fluent)</option>
+                        <option value="generative">fig-generative: Otimização Generativa Pilone</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-slate-700 font-bold mb-1">URL DIRETO DO GITHUB RAW:</label>
+                    <input id="modalUrlInput" type="url" placeholder="https://raw.githubusercontent.com/utilizador/repo/main/assets/imagem.jpg" class="w-full px-3 py-2 rounded-xl bg-slate-50 border border-slate-300 text-slate-900 focus:outline-none focus:border-blue-600">
+                </div>
+
+                <div class="p-4 rounded-xl bg-slate-100 border border-slate-200">
+                    <div class="font-bold text-slate-800 mb-1">OU TESTE COM FICHEIRO LOCAL:</div>
+                    <input type="file" id="modalFileInput" accept="image/*" class="text-xs text-slate-600" onchange="handleModalLocalFile(event)">
+                </div>
+
+                <div class="pt-4 flex justify-end gap-3">
+                    <button onclick="closeGhModal()" class="px-4 py-2 rounded-xl border border-slate-300 text-slate-700 font-bold hover:bg-slate-100">
+                        Cancelar
+                    </button>
+                    <button onclick="applyGhImageUpdate()" class="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold shadow-md">
+                        <i class="fa-solid fa-check mr-1"></i> Aplicar Imagem
+                    </button>
+                </div>
+
+                <!-- Code Snippet Copy Helper -->
+                <div class="mt-6 border-t border-slate-200 pt-4">
+                    <div class="font-bold text-slate-800 mb-2">SNIPPET HTML PARA COPY-PASTE NO CÓDIGO FONTE:</div>
+                    <pre id="codeSnippetBox" class="p-3 rounded-xl bg-slate-950 text-amber-400 text-[11px] overflow-x-auto selection:bg-amber-900">&lt;img src="https://raw.githubusercontent.com/USER/REPO/main/assets/nome.jpg" alt="F-86 Sabre" /&gt;</pre>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript Interactions & Three.js 3D Engine -->
+    <script>
+        // Mobile Navigation Toggle
+        const mobileNavToggle = document.getElementById('mobileNavToggle');
+        const mobileNav = document.getElementById('mobileNav');
+        mobileNavToggle.addEventListener('click', () => {
+            mobileNav.classList.toggle('hidden');
+        });
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => mobileNav.classList.add('hidden'));
+        });
+
+        // Tab Switching Logic for Fase 0 (M0)
+        function switchM0Tab(tabKey) {
+            document.querySelectorAll('.m0-tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.m0-tab-btn').forEach(btn => {
+                btn.classList.remove('active', 'bg-blue-600', 'text-white');
+                btn.classList.add('bg-white', 'text-slate-700');
+            });
+
+            document.getElementById(`m0Content-${tabKey}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tabBtn-${tabKey}`);
+            activeBtn.classList.add('active', 'bg-blue-600', 'text-white');
+            activeBtn.classList.remove('bg-white', 'text-slate-700');
+        }
+
+        // CAD Parameter Calculator Mechanics
+        const inputGForce = document.getElementById('inputGForce');
+        const inputMissileMass = document.getElementById('inputMissileMass');
+        const inputPylonHeight = document.getElementById('inputPylonHeight');
+        const selectMaterial = document.getElementById('selectMaterial');
+
+        function updateCadCalculator() {
+            const gVal = parseFloat(inputGForce.value);
+            const massVal = parseFloat(inputMissileMass.value);
+            const heightVal = parseFloat(inputPylonHeight.value);
+            const materialKey = selectMaterial.value;
+
+            document.getElementById('valGForce').textContent = `${gVal.toFixed(1)} G`;
+            document.getElementById('valMissileMass').textContent = `${massVal.toFixed(1)} kg`;
+            document.getElementById('valPylonHeight').textContent = `${heightVal} mm`;
+
+            // Structural Calculations (Simplified FEA estimation)
+            const dynamicForce = massVal * 9.81 * gVal; // Force in Newtons
+            const momentArm = heightVal / 1000.0;       // Height in meters
+            const moment = dynamicForce * momentArm;
+
+            // Material Yield Strengths (MPa)
+            const yields = { al7075: 503, ti6al4v: 880, chromoly: 435 };
+            const yieldStrength = yields[materialKey] || 503;
+
+            // Estimated Stress (MPa) based on section modulus
+            const estimatedStress = Math.round((moment / 0.000012) / 1000000.0);
+            const safetyFactor = (yieldStrength / estimatedStress).toFixed(2);
+
+            document.getElementById('resForce').textContent = `${Math.round(dynamicForce).toLocaleString()} N`;
+            document.getElementById('resStress').textContent = `${estimatedStress} MPa`;
+
+            const resSafetyEl = document.getElementById('resSafety');
+            const statusBox = document.getElementById('statusBox');
+
+            if (safetyFactor >= 1.5) {
+                resSafetyEl.textContent = `${safetyFactor} (SEGURO)`;
+                resSafetyEl.className = "text-lg font-bold text-emerald-400 mt-0.5";
+                statusBox.innerHTML = '<span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle-check"></i> Estrutura Aprovada sob Carga Assimétrica (SF &ge; 1.5)</span>';
+            } else if (safetyFactor >= 1.0) {
+                resSafetyEl.textContent = `${safetyFactor} (ALERTA)`;
+                resSafetyEl.className = "text-lg font-bold text-amber-400 mt-0.5";
+                statusBox.innerHTML = '<span class="text-amber-400 font-bold"><i class="fa-solid fa-triangle-exclamation"></i> Margem de Segurança Limite (SF &lt; 1.5)</span>';
+            } else {
+                resSafetyEl.textContent = `${safetyFactor} (FALHA)`;
+                resSafetyEl.className = "text-lg font-bold text-red-400 mt-0.5";
+                statusBox.innerHTML = '<span class="text-red-400 font-bold"><i class="fa-solid fa-circle-xmark"></i> Falha Estrutural Detetada - Reduzir Carga G</span>';
+            }
+        }
+
+        inputGForce.addEventListener('input', updateCadCalculator);
+        inputMissileMass.addEventListener('input', updateCadCalculator);
+        inputPylonHeight.addEventListener('input', updateCadCalculator);
+        selectMaterial.addEventListener('change', updateCalculator);
+        updateCadCalculator();
+
+        // GitHub Image Placeholder Manager Modal Logic
+        let modalLocalFileBase64 = null;
+
+        function openGhModal() {
+            document.getElementById('ghModal').classList.remove('hidden');
+        }
+
+        function openGhModalFor(targetKey) {
+            document.getElementById('modalTargetSelect').value = targetKey;
+            openGhModal();
+        }
+
+        function closeGhModal() {
+            document.getElementById('ghModal').classList.add('hidden');
+            modalLocalFileBase64 = null;
+            document.getElementById('modalFileInput').value = '';
+        }
+
+        function handleModalLocalFile(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    modalLocalFileBase64 = evt.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function applyGhImageUpdate() {
+            const targetKey = document.getElementById('modalTargetSelect').value;
+            const urlInput = document.getElementById('modalUrlInput').value.trim();
+
+            const boxEl = document.getElementById(`gh-box-${targetKey}`);
+            if (!boxEl) return;
+
+            const imgEl = document.getElementById(`img-${targetKey}`);
+            const previewContainer = boxEl.querySelector('.img-preview-container');
+            const placeholderContent = boxEl.querySelector('.placeholder-content');
+
+            const imgSrc = modalLocalFileBase64 || urlInput;
+
+            if (imgSrc) {
+                imgEl.src = imgSrc;
+                previewContainer.classList.remove('hidden');
+                placeholderContent.classList.add('hidden');
+                
+                // Update code snippet preview
+                document.getElementById('codeSnippetBox').textContent = `<img id="img-${targetKey}" src="${urlInput || 'local-file.jpg'}" alt="F-86 Sabre ${targetKey}" />`;
+            }
+
+            closeGhModal();
+        }
+
+        // Three.js 3D Assembly Interactive Engine
+        let scene, camera, renderer;
+        let wingGroup, pylonMesh, railMesh, missileMesh;
+        let isWireframe = false;
+        let isExploded = false;
+
+        window.addEventListener('load', () => {
+            const container = document.getElementById('hero3dCanvas');
+            if (!container) return;
+
+            const w = container.clientWidth;
+            const h = container.clientHeight;
+
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x0f172a); // Academic Dark Slate 3D Background
+
+            camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
+            camera.position.set(4, 3, 6);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(w, h);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+            scene.add(ambientLight);
+
+            const dirLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
+            dirLight1.position.set(5, 10, 7);
+            scene.add(dirLight1);
+
+            const dirLight2 = new THREE.DirectionalLight(0x2563eb, 0.5);
+            dirLight2.position.set(-5, -5, -5);
+            scene.add(dirLight2);
+
+            // Main Assembly Group
+            wingGroup = new THREE.Group();
+
+            // Materials
+            const wingMat = new THREE.MeshStandardMaterial({ color: 0xcbd5e1, metalness: 0.6, roughness: 0.3 });
+            const stripeMat = new THREE.MeshStandardMaterial({ color: 0xeab308, metalness: 0.2, roughness: 0.4 });
+            const pylonMat = new THREE.MeshStandardMaterial({ color: 0x475569, metalness: 0.5, roughness: 0.4 });
+            const missileMat = new THREE.MeshStandardMaterial({ color: 0xf8fafc, metalness: 0.3, roughness: 0.2 });
+
+            // 1. F-86 Swept Wing Geometry
+            const wingShape = new THREE.Shape();
+            wingShape.moveTo(0, 0);
+            wingShape.lineTo(2.5, -1.8);
+            wingShape.lineTo(2.2, -2.4);
+            wingShape.lineTo(0, -1.2);
+            wingShape.closePath();
+
+            const extrudeSettings = { depth: 0.12, bevelEnabled: true, bevelSegments: 3, steps: 1, bevelSize: 0.04, bevelThickness: 0.04 };
+            const wingGeo = new THREE.ExtrudeGeometry(wingShape, extrudeSettings);
+            const wingMesh = new THREE.Mesh(wingGeo, wingMat);
+            wingMesh.rotation.x = Math.PI / 2;
+            wingGroup.add(wingMesh);
+
+            // Wing Stripe Accent (F-86 Yellow Motif)
+            const stripeGeo = new THREE.BoxGeometry(0.3, 0.14, 0.7);
+            const stripeMesh = new THREE.Mesh(stripeGeo, stripeMat);
+            stripeMesh.position.set(1.8, 0, -1.7);
+            wingGroup.add(stripeMesh);
+
+            // 2. Pylon (Suporte de Fixação)
+            const pylonGeo = new THREE.BoxGeometry(0.12, 0.5, 1.2);
+            pylonMesh = new THREE.Mesh(pylonGeo, pylonMat);
+            pylonMesh.position.set(1.1, -0.3, -1.0);
+            wingGroup.add(pylonMesh);
+
+            // 3. Aero-3B Launch Rail
+            const railGeo = new THREE.BoxGeometry(0.08, 0.1, 1.8);
+            railMesh = new THREE.Mesh(railGeo, pylonMat);
+            railMesh.position.set(1.1, -0.6, -1.0);
+            wingGroup.add(railMesh);
+
+            // 4. AIM-9 Sidewinder Missile
+            const missileGroup = new THREE.Group();
+            
+            // Missile Body Tube
+            const tubeGeo = new THREE.CylinderGeometry(0.09, 0.09, 2.2, 16);
+            const tubeMesh = new THREE.Mesh(tubeGeo, missileMat);
+            tubeMesh.rotation.x = Math.PI / 2;
+            missileGroup.add(tubeMesh);
+
+            // Missile Nose Cone (Sensor Infravermelho)
+            const noseGeo = new THREE.ConeGeometry(0.09, 0.3, 16);
+            const noseMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.1 });
+            const noseMesh = new THREE.Mesh(noseGeo, noseMat);
+            noseMesh.rotation.x = -Math.PI / 2;
+            noseMesh.position.z = 1.25;
+            missileGroup.add(noseMesh);
+
+            // Missile Fins (Aletas Canard & Tail)
+            const finGeo = new THREE.BoxGeometry(0.4, 0.02, 0.2);
+            const finMesh1 = new THREE.Mesh(finGeo, pylonMat);
+            finMesh1.position.z = 0.8;
+            missileGroup.add(finMesh1);
+
+            const finMesh2 = new THREE.Mesh(finGeo, pylonMat);
+            finMesh2.position.z = -0.8;
+            missileGroup.add(finMesh2);
+
+            missileMesh = missileGroup;
+            missileMesh.position.set(1.1, -0.75, -1.0);
+            wingGroup.add(missileMesh);
+
+            scene.add(wingGroup);
+
+            // Drag Rotation Variables
+            let isDragging = false;
+            let prevMouse = { x: 0, y: 0 };
+
+            container.addEventListener('mousedown', (e) => { isDragging = true; prevMouse = { x: e.clientX, y: e.clientY }; });
+            container.addEventListener('mousemove', (e) => {
+                if (isDragging) {
+                    const deltaX = e.clientX - prevMouse.x;
+                    const deltaY = e.clientY - prevMouse.y;
+                    wingGroup.rotation.y += deltaX * 0.01;
+                    wingGroup.rotation.x += deltaY * 0.01;
+                    prevMouse = { x: e.clientX, y: e.clientY };
+                }
+            });
+            window.addEventListener('mouseup', () => isDragging = false);
+
+            window.addEventListener('resize', () => {
+                const nw = container.clientWidth;
+                const nh = container.clientHeight;
+                camera.aspect = nw / nh;
+                camera.updateProjectionMatrix();
+                renderer.setSize(nw, nh);
+            });
+
+            function animate() {
+                requestAnimationFrame(animate);
+                if (!isDragging) {
+                    wingGroup.rotation.y += 0.003;
+                }
+                renderer.render(scene, camera);
+            }
+            animate();
+        });
+
+        function toggle3DWireframe() {
+            isWireframe = !isWireframe;
+            scene.traverse((obj) => {
+                if (obj.isMesh && obj.material) {
+                    obj.material.wireframe = isWireframe;
+                }
+            });
+            document.getElementById('wireframeStatus').textContent = isWireframe ? 'Wireframe Ativo' : 'Sólido Shaded';
+        }
+
+        function toggle3DExplode() {
+            isExploded = !isExploded;
+            if (isExploded) {
+                pylonMesh.position.y = -0.7;
+                railMesh.position.y = -1.2;
+                missileMesh.position.y = -1.8;
+            } else {
+                pylonMesh.position.y = -0.3;
+                railMesh.position.y = -0.6;
+                missileMesh.position.y = -0.75;
+            }
+        }
+
+        function reset3DCamera() {
+            wingGroup.rotation.set(0, 0, 0);
+            camera.position.set(4, 3, 6);
+            if (isExploded) toggle3DExplode();
+            if (isWireframe) toggle3DWireframe();
+        }
+    </script>
+</body>
+</html>
